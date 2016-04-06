@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="webgl-utils.js"></script>
+  <script type="text/javascript" src="initShaders.js"></script>
+  <script type="text/javascript" src="MV.js"></script>
+  <script type="text/javascript" src="MatrixStack.js"></script>  
+  <script type="text/javascript" src="Sphere.js"></script>
+  <script type="text/javascript" src="SolarSystem.js"></script>
+  <script type="text/javascript" src="Solar.js"></script>
+
+  <script type="x-shader/x-vertex" id="Planet-vertex-shader">
+  attribute vec4  vPosition;
+
+  uniform mat4  MV;
+  uniform mat4  P;
+
+  void main()
+  {
+	gl_PointSize = 2.0;
+    gl_Position = P * MV * vPosition;
+  }
+  </script>
+
+  <script type="x-shader/x-fragment" id="Planet-fragment-shader">
+  precision highp float;
+
+  uniform vec4  color;
+
+  void main()
+  {
+    gl_FragColor = color;
+  }
+  </script>
+  <style>
+  * {
+  margin: 0;
+  padding: 0;
+  }
+  body {
+  margin-top: 5px;
+  margin-left: 5px;
+  }
+  div.title {
+	width: 1583px;
+	height: 40px;
+	background-color: black;
+	text-align: center;
+	color: red;
+	padding-top: 5px;
+	border-bottom: red solid 2px;
+	}
+  div.name {
+	width: 153px;
+	height: 30px;
+	background-color: black;
+	color: red;
+	margin-top: -4px;
+	padding-top: 8px;
+	padding-bottom: 2px;
+	padding-left: 1430px;
+	border-top: red solid 2px;
+	}
+  </style>
+</head>
+
+<body>
+  <div class="title">
+  <h1>The Solar System</h1>
+  </div>
+  <canvas id="webgl-canvas" width="1582" height="790"></canvas>
+  <div class="name">
+  <p>Martin Reyes Diaz</p>
+  </div>
+</body>
+</html>
