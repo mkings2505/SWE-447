@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>ASTEROID</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			*{margin: 0; padding: 0;}
+			body {
+				font-family: Monospace;
+				background-color: #000;
+				color: #fff;
+				margin: 0px;
+				overflow: hidden;
+			}
+			div {
+				margin: 0;
+				padding-top: -10px;
+				width: 1500px;
+				height: 40px;
+				background-color: black;
+				color: red;
+			}
+			.leftbottom {
+				text-align: center;
+				margin-top: -40px;
+				margin-left: 520px;
+			}
+			h1 {
+			text-align: center;
+			margin-bottom: -25px;
+			}
+			h2 {
+			text-align: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<script src="three.min.js"></script>
+		<script src="OBJLoader.js"></script>
+		<div><h1>ASTEROID</h1><br><h2>Mission: DESTROY THE ASTEROIDS! -------------------------------------------------------------- Your Score: </h2></div>
+		<script>
+			//figure out how to update the asteroid.position.x and asteroid.position.y for each frame randomly so that the asteroid appear in a new position outside of the window each time
+			//also use the mouseDown() js function to make the asteroid explosion animation and reset it's position when it is clicked on with the mouse (there is also a mouseUp() may be used for something else) I found an example on W3Schools
+			//in the mouseDown() create a counter to add the score value by one each time an asteroid is clicked
+			//write code for asteroids 7, 8, 9, or 10 if I want more asteroids to appear on the scene.
+			var asteroid;
+			var asteroid2;//variable for another asteroid
+			var asteroid3;
+			var asteroid4;
+			var asteroid5;
+			var asteroid6;
+			var asteroid7;
+			var asteroid8;
+			var asteroid9;
+			var asteroid10;
+			var raycaster = new THREE.Raycaster();
+			var container;
+			var camera, scene, renderer;
+			var mouseX = 0, mouseY = 0;
+			var windowHalfX = window.innerWidth / 2;
+			var windowHalfY = window.innerHeight / 2;
+			init();
+			animate();
+			function init() {
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+				camera.position.z = 250;
+				// scene
+				scene = new THREE.Scene();
+				var ambient = new THREE.AmbientLight( 0x101030 );
+				scene.add( ambient );
+				var directionalLight = new THREE.DirectionalLight( 0xffeedd );
+				directionalLight.position.set( 0, 0, 1 );
+				scene.add( directionalLight );
+				// texture
+				var manager = new THREE.LoadingManager();
+				manager.onProgress = function ( item, loaded, total ) {
+					console.log( item, loaded, total );
+				};
+				var texture = new THREE.Texture();
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+				var onError = function ( xhr ) {
+				};
+				//adds the texture to the model
+				var loader = new THREE.ImageLoader( manager );
+				loader.load( 'asteroid3.png', function ( image ) {
+					texture.image = image;
+					texture.needsUpdate = true;
+				} );
+				// model
+				
+				var loader = new THREE.OBJLoader( manager );
+				loader.load( 'asteroid.obj', function ( object ) {
+					var mesh;
+					object.traverse( function ( child ) {
+						if ( child instanceof THREE.Mesh ) {
+							mesh = child;
+							child.material.map = texture;
+						}
+					} );
+					asteroid = mesh.clone();
+					asteroid.position.x = -375;
+					asteroid.position.y = -140;
+					asteroid.position.z = -100;
+					scene.add( asteroid );
+					asteroid2 = mesh.clone(); //creates another asteroid
+					asteroid2.position.x = 395;
+					asteroid2.position.y = 200;
+					asteroid2.position.z = -100;
+					scene.add( asteroid2 );
+					asteroid3 = mesh.clone(); //creates another asteroid
+					asteroid3.position.x = -378;
+					asteroid3.position.y = 0;
+					asteroid3.position.z = -100;
+					scene.add( asteroid3 );
+					asteroid4 = mesh.clone(); //creates another asteroid
+					asteroid4.position.x = -380;
+					asteroid4.position.y = 140;
+					asteroid4.position.z = -100;
+					scene.add( asteroid4 );
+					asteroid5 = mesh.clone(); //creates another asteroid
+					asteroid5.position.x = 418;
+					asteroid5.position.y = -140;
+					asteroid5.position.z = -100;
+					scene.add( asteroid5 );
+					asteroid6 = mesh.clone(); //creates another asteroid
+					asteroid6.position.x = -40;
+					asteroid6.position.y = -140;
+					asteroid6.position.z = -100;
+					scene.add( asteroid6 );
+					asteroid7 = mesh.clone(); //creates another asteroid
+					asteroid7.position.x = -378;
+					asteroid7.position.y = 0;
+					asteroid7.position.z = -100;
+					scene.add( asteroid7 );
+					asteroid8 = mesh.clone(); //creates another asteroid
+					asteroid8.position.x = -378;
+					asteroid8.position.y = 0;
+					asteroid8.position.z = -100;
+					scene.add( asteroid8 );
+					asteroid9 = mesh.clone(); //creates another asteroid
+					asteroid9.position.x = -378;
+					asteroid9.position.y = 0;
+					asteroid9.position.z = -100;
+					scene.add( asteroid9 );
+					asteroid10 = mesh.clone(); //creates another asteroid
+					asteroid10.position.x = -378;
+					asteroid10.position.y = 0;
+					asteroid10.position.z = -100;
+					scene.add( asteroid3 );
+				}, onProgress, onError );
+				//
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				container.appendChild( renderer.domElement );
+				//renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
+				
+				window.addEventListener( 'resize', onWindowResize, false );
+			}
+			function onWindowResize() {
+				windowHalfX = window.innerWidth / 2;
+				windowHalfY = window.innerHeight / 2;
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+			function onDocumentMouseDown( event ) {
+				var intersects = raycaster.intersectObjects( asteroid );
+				if ( intersects.length > 0 ) {
+						asteroid.position.x = -375;
+						asteroid.position.y = -140;}
+				}
+			function animate() {
+				requestAnimationFrame( animate );
+				render();
+			}
+			
+			function render() {
+				asteroid.position.x += 5;
+				asteroid.position.y += 1.9;
+				if (asteroid.position.x == 375) {
+					asteroid.position.x = -375;
+					asteroid.position.y = -140;
+				}
+				asteroid2.position.x -= 5;
+				asteroid2.position.y -= 1.9;
+				if (asteroid2.position.x == -375) {
+					asteroid2.position.x = 395;
+					asteroid2.position.y = 200;
+				}
+				asteroid3.position.x += 7;
+				asteroid3.position.y += .5;
+				if (asteroid3.position.x == 378) {
+					asteroid3.position.x = -378;
+					asteroid3.position.y = -0;}
+				asteroid4.position.x += 10;
+				asteroid4.position.y += -1.9;
+				if (asteroid4.position.x == 380) {
+					asteroid4.position.x = -380;
+					asteroid4.position.y = 140;}
+				asteroid5.position.x -= 11;
+				asteroid5.position.y += 1.9;
+				if (asteroid5.position.x == -418) {
+					asteroid5.position.x = 418;
+					asteroid5.position.y = -140;}
+				asteroid6.position.x +=.5;
+				asteroid6.position.y += 2;
+				if (asteroid6.position.y == 140) {
+					asteroid6.position.x = -40;
+					asteroid6.position.y = -140;}
+				camera.lookAt( scene.position );
+				renderer.render( scene, camera );
+			}
+		</script>
+		<div class= "leftbottom"><h2>Martin Reyes Diaz</h2></div>
+	</body>
+</html>
