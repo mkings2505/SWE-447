@@ -13,7 +13,7 @@ function init() {
 	var canvas = document.getElementById("webgl-canvas");
 	
 	gl = WebGLUtils.setupWebGL(canvas);
-	if (!gl) {return};
+	if (!gl) {return; }
 	var program = initShaders( gl, "vertex-shader", "fragment-shader");
 	gl.useProgram(program);
 	
@@ -39,3 +39,4 @@ function render() {
 	gl.drawArrays(gl.TRIANGLE_STRIP, start, count);
 }
 window.onload = init;
+
