@@ -37,7 +37,7 @@
 	</head>
 
 	<body>
-		<script src="three.min.js"></script>
+		<script src="three.js"></script>
 		<script src="OBJLoader.js"></script>
 		<div><h1>ASTEROID</h1><br><h2>Mission: DESTROY THE ASTEROIDS! -------------------------------------------------------------- Your Score: </h2></div>
 		<script>
@@ -51,14 +51,17 @@
 			var asteroid4;
 			var asteroid5;
 			var asteroid6;
-			var asteroid7;
+			/*var asteroid7;
 			var asteroid8;
 			var asteroid9;
-			var asteroid10;
+			var asteroid10;*/
 			var raycaster = new THREE.Raycaster();
+			var mouse = new THREE.Vector2(),
+			offset = new THREE.Vector3(),
+			INTERSECTED, SELECTED;
 			var container;
 			var camera, scene, renderer;
-			var mouseX = 0, mouseY = 0;
+			
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
 			init();
@@ -136,7 +139,7 @@
 					asteroid6.position.y = -140;
 					asteroid6.position.z = -100;
 					scene.add( asteroid6 );
-					asteroid7 = mesh.clone(); //creates another asteroid
+					/*asteroid7 = mesh.clone(); //creates another asteroid
 					asteroid7.position.x = -378;
 					asteroid7.position.y = 0;
 					asteroid7.position.z = -100;
@@ -155,14 +158,14 @@
 					asteroid10.position.x = -378;
 					asteroid10.position.y = 0;
 					asteroid10.position.z = -100;
-					scene.add( asteroid3 );
+					scene.add( asteroid3 );*/
 				}, onProgress, onError );
 				//
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
-				//renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
+				renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
 				
 				window.addEventListener( 'resize', onWindowResize, false );
 			}
@@ -174,10 +177,16 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 			}
 			function onDocumentMouseDown( event ) {
-				var intersects = raycaster.intersectObjects( asteroid );
+				event.preventDefault();
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+				raycaster.setFromCamera( mouse, camera );
+				var intersects = raycaster.intersectObjects( [asteroid] );
 				if ( intersects.length > 0 ) {
 						asteroid.position.x = -375;
-						asteroid.position.y = -140;}
+						asteroid.position.y = -140;
+							console.log("works");}
+					
 				}
 			function animate() {
 				requestAnimationFrame( animate );
