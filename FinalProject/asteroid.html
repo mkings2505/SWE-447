@@ -33,16 +33,49 @@
 			h2 {
 			text-align: center;
 			}
+				#blocker {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0,0,0,0.01);
+			}
+				#instructions {
+				width: 100%;
+				height: 100%;
+				display: -webkit-box;
+				display: -moz-box;
+				display: box;
+				-webkit-box-orient: horizontal;
+				-moz-box-orient: horizontal;
+				box-orient: horizontal;
+				-webkit-box-pack: center;
+				-moz-box-pack: center;
+				box-pack: center;
+				-webkit-box-align: center;
+				-moz-box-align: center;
+				box-align: center;
+				color: #ffffff;
+				text-align: center;
+				cursor: pointer;
+			}
 		</style>
 	</head>
 
 	<body>
+		<div id="blocker">
+		<div id="instructions">
+				<span style="font-size:40px">Click to play</span>
+				
+		</div>
 		<script src="three.min.js"></script>
+		<script src="PointerLockControls.js"></script>
 		<script src="OBJLoader.js"></script>
 		<div><h1>ASTEROID</h1><br><h2>Mission: DESTROY THE ASTEROIDS! -------------------------------------------------------------- Your Score: </h2></div>
 		<script>
-			//Working on:
-			//use the mouseDown() js function to make the asteroid explosion animation and reset it's position when it is clicked on with the mouse (there is also a mouseUp() may be used for something else) I found an example on W3Schools
+			var instructions = document.getElementById( 'instructions' );
+			var blocker = document.getElementById( 'blocker' );
+			//Work in Progress
+			//Use the mouseDown() js function to make the asteroid explosion animation and reset it's position when it is clicked on with the mouse (there is also a mouseUp() may be used for something else) I found an example on W3Schools
 			//in the mouseDown() create a counter to add the score value by one each time an asteroid is clicked
 			
 			var asteroid;
@@ -51,16 +84,65 @@
 			var asteroid4;
 			var asteroid5;
 			var asteroid6;
-
+			
 			var raycaster = new THREE.Raycaster();
 			var mouse = new THREE.Vector2(),
 			offset = new THREE.Vector3(),
 			INTERSECTED, SELECTED;
 			var container;
 			var camera, scene, renderer;
-			
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
+			var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
+			
+			if ( havePointerLock ) {
+				var element = document.body;
+				var pointerlockchange = function ( event ) {
+					if ( document.pointerLockElement === element || document.mozPointerLockElement === element || document.webkitPointerLockElement === element ) {
+						controlsEnabled = true;
+						controls.enabled = true;
+						blocker.style.display = 'none';
+					} else {
+						controls.enabled = false;
+						blocker.style.display = '-webkit-box';
+						blocker.style.display = '-moz-box';
+						blocker.style.display = 'box';
+						instructions.style.display = '';
+					}
+				};
+				var pointerlockerror = function ( event ) {
+					instructions.style.display = '';
+				};
+				// Hook pointer lock state change events
+				document.addEventListener( 'pointerlockchange', pointerlockchange, false );
+				document.addEventListener( 'mozpointerlockchange', pointerlockchange, false );
+				document.addEventListener( 'webkitpointerlockchange', pointerlockchange, false );
+				document.addEventListener( 'pointerlockerror', pointerlockerror, false );
+				document.addEventListener( 'mozpointerlockerror', pointerlockerror, false );
+				document.addEventListener( 'webkitpointerlockerror', pointerlockerror, false );
+				instructions.addEventListener( 'click', function ( event ) {
+					instructions.style.display = 'none';
+					// Ask the browser to lock the pointer
+					element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+					if ( /Firefox/i.test( navigator.userAgent ) ) {
+						var fullscreenchange = function ( event ) {
+							if ( document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element ) {
+								document.removeEventListener( 'fullscreenchange', fullscreenchange );
+								document.removeEventListener( 'mozfullscreenchange', fullscreenchange );
+								element.requestPointerLock();
+							}
+						};
+						document.addEventListener( 'fullscreenchange', fullscreenchange, false );
+						document.addEventListener( 'mozfullscreenchange', fullscreenchange, false );
+						element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
+						element.requestFullscreen();
+					} else {
+						element.requestPointerLock();
+					}
+				}, false );
+			} else {
+				instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
+			}
 			init();
 			animate();
 			function init() {
