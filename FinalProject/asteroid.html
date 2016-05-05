@@ -41,20 +41,17 @@
 		<script src="OBJLoader.js"></script>
 		<div><h1>ASTEROID</h1><br><h2>Mission: DESTROY THE ASTEROIDS! -------------------------------------------------------------- Your Score: </h2></div>
 		<script>
-			//figure out how to update the asteroid.position.x and asteroid.position.y for each frame randomly so that the asteroid appear in a new position outside of the window each time
-			//also use the mouseDown() js function to make the asteroid explosion animation and reset it's position when it is clicked on with the mouse (there is also a mouseUp() may be used for something else) I found an example on W3Schools
+			//Working on:
+			//use the mouseDown() js function to make the asteroid explosion animation and reset it's position when it is clicked on with the mouse (there is also a mouseUp() may be used for something else) I found an example on W3Schools
 			//in the mouseDown() create a counter to add the score value by one each time an asteroid is clicked
-			//write code for asteroids 7, 8, 9, or 10 if I want more asteroids to appear on the scene.
+			
 			var asteroid;
 			var asteroid2;//variable for another asteroid
 			var asteroid3;
 			var asteroid4;
 			var asteroid5;
 			var asteroid6;
-			/*var asteroid7;
-			var asteroid8;
-			var asteroid9;
-			var asteroid10;*/
+
 			var raycaster = new THREE.Raycaster();
 			var mouse = new THREE.Vector2(),
 			offset = new THREE.Vector3(),
@@ -139,26 +136,7 @@
 					asteroid6.position.y = -140;
 					asteroid6.position.z = -100;
 					scene.add( asteroid6 );
-					/*asteroid7 = mesh.clone(); //creates another asteroid
-					asteroid7.position.x = -378;
-					asteroid7.position.y = 0;
-					asteroid7.position.z = -100;
-					scene.add( asteroid7 );
-					asteroid8 = mesh.clone(); //creates another asteroid
-					asteroid8.position.x = -378;
-					asteroid8.position.y = 0;
-					asteroid8.position.z = -100;
-					scene.add( asteroid8 );
-					asteroid9 = mesh.clone(); //creates another asteroid
-					asteroid9.position.x = -378;
-					asteroid9.position.y = 0;
-					asteroid9.position.z = -100;
-					scene.add( asteroid9 );
-					asteroid10 = mesh.clone(); //creates another asteroid
-					asteroid10.position.x = -378;
-					asteroid10.position.y = 0;
-					asteroid10.position.z = -100;
-					scene.add( asteroid3 );*/
+					
 				}, onProgress, onError );
 				//
 				renderer = new THREE.WebGLRenderer();
